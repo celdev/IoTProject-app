@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">IoTProject</string>
+    <string name="output">output</string>
+    <string name="error">error</string>
+    <string name="error_parse">Sorry, couldn\'t understand %1$s</string>
+    <string name="setup">Setup</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="checking_ip">checking IP</string>
+    <string name="error_ip">Incorrect ip</string>
+    <string name="check_ip">Check IP</string>
+</resources>
