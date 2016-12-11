@@ -1,10 +1,7 @@
 package iotproj.iotproject;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +31,7 @@ public class SetupDialog extends AlertDialog.Builder {
                     @Override
                     public void receiveAsyncResult(String result) {
                         progressDialog.dismiss();
-                        if (result != null && result.equals("ok")) {
+                        if (result != null && result.trim().equals("ok")) {
                             mainActivity.setIoTGateWayIP(ipField.getText().toString());
                             if (alertDialog != null) {
                                 alertDialog.dismiss();
@@ -43,7 +40,7 @@ public class SetupDialog extends AlertDialog.Builder {
                             Toast.makeText(mainActivity,R.string.error_ip,Toast.LENGTH_LONG).show();
                         }
                     }
-                }).execute("http://" + ipField.getText().toString() + ":4091/test");
+                }).execute("http://" + ipField.getText().toString() + ":" + MainActivity.IoT_GATEWAY_PORT + "/test");
             }
         });
 

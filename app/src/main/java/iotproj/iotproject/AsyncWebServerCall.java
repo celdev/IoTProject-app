@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-class AsyncWebServerCall extends AsyncTask<String, Void, String> {
+public class AsyncWebServerCall extends AsyncTask<String, Void, String> {
 
     private static final String TAG = "iotproj.async" ;
     private AsyncCallback asyncCallback;

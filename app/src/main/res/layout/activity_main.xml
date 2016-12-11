@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/status_bar_margin_top">
+        android:layout_marginTop="@dimen/status_bar_margin_top"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -26,18 +27,20 @@
                 android:layout_width="@dimen/lightbulb_size"
                 android:layout_height="@dimen/lightbulb_size"
                 android:src="@drawable/ic_lightbulb"
+                android:id="@+id/lamp_1_image"
+                android:layout_gravity="center"
+                android:contentDescription="@string/lamp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lamp_unit_1"
                 android:layout_gravity="center"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="lampa 1"
-                android:layout_gravity="center"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OFF"
+                android:text="@string/off"
+                android:id="@+id/lamp_1_state_text"
                 android:layout_gravity="center"
                 />
 
@@ -55,18 +58,20 @@
                 android:layout_height="@dimen/lightbulb_size"
                 android:src="@drawable/ic_lightbulb_on"
                 android:layout_gravity="center"
+                android:id="@+id/lamp_2_image"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="lampa 2"
+                android:text="@string/lamp_unit_2"
                 android:layout_gravity="center"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ON"
+                android:text="@string/on"
+                android:id="@+id/lamp_2_state_text"
                 android:layout_gravity="center"
                 />
 
@@ -88,7 +93,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Temperatur"
+                android:text="@string/temperature"
                 android:layout_gravity="center"
                 />
             <TextView
@@ -96,6 +101,7 @@
 
                 android:layout_height="wrap_content"
                 android:text="18,9° C"
+                android:id="@+id/temperature_value_text"
                 android:layout_gravity="center"
                 />
         </LinearLayout>
@@ -113,6 +119,22 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/thread_list_height"
+        android:layout_below="@id/output"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/running_conditions"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/thread_list">
+        </ListView>
+    </LinearLayout>
+
     <ImageButton
         android:layout_width="@dimen/talk_button_size"
         android:layout_height="@dimen/talk_button_size"
@@ -122,6 +144,7 @@
         android:id="@+id/talk_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/status_bar_margin_top"/>
+        android:layout_marginBottom="@dimen/status_bar_margin_top"
+        android:contentDescription="@string/talk_button" />
 
 </RelativeLayout>

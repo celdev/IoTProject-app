@@ -9,4 +9,12 @@
     <string name="checking_ip">checking IP</string>
     <string name="error_ip">Incorrect ip</string>
     <string name="check_ip">Check IP</string>
+    <string name="lamp">Lamp</string>
+    <string name="lamp_unit_1">Lights 1</string>
+    <string name="lamp_unit_2">Lights 2</string>
+    <string name="off">OFF</string>
+    <string name="on">ON</string>
+    <string name="temperature">Temperature</string>
+    <string name="talk_button">Talk button</string>
+    <string name="running_conditions">Running conditions:</string>
 </resources>
