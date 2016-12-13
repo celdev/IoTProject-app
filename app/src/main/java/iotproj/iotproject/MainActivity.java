@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "iotproj.iotproject.MA";
 
+    public static final String TIME_TAG = "iotproj.time";
+
     private String ioTGateWayIP = "81.230.190.13";
     public static final int IoT_GATEWAY_PORT = 4091;
 
@@ -51,11 +53,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         conditionThreads = new ArrayList<>();
-        try {
-            conditionThreads.add(new ConditionThread("T%1%[hello world]%true"));
-        } catch (IncorrectRetrievableException e) {
-            e.printStackTrace();
-        }
         getViews();
         initButtonFunctionality();
         initList();
@@ -87,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 startActivityForResult(intent, 1);
+                Log.d(TAG, "starting voice command intent at " + System.currentTimeMillis());
             }
         });
     }
@@ -94,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TIME_TAG, "onActivityResult: start " + System.currentTimeMillis());
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String result = "" + data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0);
             result = result.toLowerCase().replace(" ", "_");
@@ -107,29 +106,31 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Text-Till-Tal misslyckades", Toast.LENGTH_LONG).show();
         }
+        Log.i(TIME_TAG, "onActivityResult: stop " + System.currentTimeMillis());
     }
 
     public void updateList(List<Retrievable> newList) {
+        Log.i(TIME_TAG, "updateList start: " + System.currentTimeMillis());
         for (Retrievable retrievable : newList) {
             if (retrievable instanceof ConditionThread) {
-                int index = conditionThreads.indexOf(retrievable);
-                if (index == -1) {
+                if (!conditionThreads.contains(retrievable)) {
                     conditionThreads.add((ConditionThread) retrievable);
                 }
             } else if (retrievable instanceof Device) {
                 Device device = (Device) retrievable;
+                State state = device.getState();
+                boolean stateIsOn = state.equals(State.ON);
                 if (device.getId() == 1) {
-                    lamp1OnOffStateText.setText(device.getState().equals(State.ON) ? R.string.on : R.string.off);
+                    lamp1OnOffStateText.setText(stateIsOn ? R.string.on : R.string.off);
+                    lamp1View.setImageDrawable(getDrawable(stateIsOn ? R.drawable.ic_lightbulb_on : R.drawable.ic_lightbulb));
                 } else if (device.getId() == 2) {
-                    lamp2OnOffStateText.setText(device.getState().equals(State.ON) ? R.string.on : R.string.off);
+                    lamp2OnOffStateText.setText(stateIsOn ? R.string.on : R.string.off);
+                    lamp2View.setImageDrawable(getDrawable(stateIsOn ? R.drawable.ic_lightbulb_on : R.drawable.ic_lightbulb));
                 }
             } else if (retrievable instanceof Sensor) {
-                Log.d(TAG, "retreviable is sensor");
                 Sensor sensor = (Sensor) retrievable;
-                Log.d(TAG, "sensor id = " + sensor.getId());
                 if (sensor.getId() == 135) {
                     String temp = sensor.getValueOfHead("TEMP");
-                    Log.d(TAG, "temperature is = " + temp);
                     tempTextView.setText(temp);
                 }
             }
@@ -142,11 +143,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         threadListAdapter.notifyDataSetChanged();
-
+        Log.i(TIME_TAG, "updateList stop: " + System.currentTimeMillis());
     }
 
     private void parseResult(String result) {
-        System.out.println("got result from server: " + result);
+        if (result.equalsIgnoreCase("error")) {
+            Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+        }
+        new GetRunner(ioTGateWayIP, IoT_GATEWAY_PORT, this, true);
     }
 
 
