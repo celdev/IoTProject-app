@@ -10,8 +10,8 @@
     <string name="error_ip">Incorrect ip</string>
     <string name="check_ip">Check IP</string>
     <string name="lamp">Lamp</string>
-    <string name="lamp_unit_1">Lights 1</string>
-    <string name="lamp_unit_2">Lights 2</string>
+    <string name="lamp_unit_1">Lights</string>
+    <string name="heating_unit_1">Heating</string>
     <string name="off">OFF</string>
     <string name="on">ON</string>
     <string name="temperature">Temperature</string>

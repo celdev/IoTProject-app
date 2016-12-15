@@ -56,14 +56,14 @@
             <ImageView
                 android:layout_width="@dimen/lightbulb_size"
                 android:layout_height="@dimen/lightbulb_size"
-                android:src="@drawable/ic_lightbulb_on"
+                android:src="@drawable/ic_heating_on"
                 android:layout_gravity="center"
                 android:id="@+id/lamp_2_image"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lamp_unit_2"
+                android:text="@string/heating_unit_1"
                 android:layout_gravity="center"
                 />
 

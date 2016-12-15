@@ -21,7 +21,6 @@ import java.util.List;
 import iotproj.iotproject.model.ConditionThread;
 import iotproj.iotproject.model.Device;
 import iotproj.iotproject.model.GetRunner;
-import iotproj.iotproject.model.IncorrectRetrievableException;
 import iotproj.iotproject.model.Retrievable;
 import iotproj.iotproject.model.Sensor;
 import iotproj.iotproject.model.State;
@@ -32,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton talkBtn;
     private TextView output;
     private ListView threadList;
-    private ImageView lamp1View, lamp2View;
-    private TextView lamp1OnOffStateText, lamp2OnOffStateText;
+    private ImageView lamp1View, heating1View;
+    private TextView lamp1OnOffStateText, heating1OnOffStateText;
     private TextView tempTextView;
 
     private static final String TAG = "iotproj.iotproject.MA";
@@ -69,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
         output = (TextView) findViewById(R.id.output);
         threadList = (ListView) findViewById(R.id.thread_list);
         lamp1View = (ImageView) findViewById(R.id.lamp_1_image);
-        lamp2View = (ImageView) findViewById(R.id.lamp_2_image);
+        heating1View = (ImageView) findViewById(R.id.lamp_2_image);
         lamp1OnOffStateText = (TextView) findViewById(R.id.lamp_1_state_text);
-        lamp2OnOffStateText = (TextView) findViewById(R.id.lamp_2_state_text);
+        heating1OnOffStateText = (TextView) findViewById(R.id.lamp_2_state_text);
         tempTextView = (TextView) findViewById(R.id.temperature_value_text);
     }
 
@@ -124,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     lamp1OnOffStateText.setText(stateIsOn ? R.string.on : R.string.off);
                     lamp1View.setImageDrawable(getDrawable(stateIsOn ? R.drawable.ic_lightbulb_on : R.drawable.ic_lightbulb));
                 } else if (device.getId() == 2) {
-                    lamp2OnOffStateText.setText(stateIsOn ? R.string.on : R.string.off);
-                    lamp2View.setImageDrawable(getDrawable(stateIsOn ? R.drawable.ic_lightbulb_on : R.drawable.ic_lightbulb));
+                    heating1OnOffStateText.setText(stateIsOn ? R.string.on : R.string.off);
+                    heating1View.setImageDrawable(getDrawable(stateIsOn ? R.drawable.ic_heating_on : R.drawable.ic_heating_off));
                 }
             } else if (retrievable instanceof Sensor) {
                 Sensor sensor = (Sensor) retrievable;
