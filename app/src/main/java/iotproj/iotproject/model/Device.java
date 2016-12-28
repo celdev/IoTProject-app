@@ -4,6 +4,10 @@ import android.util.Log;
 
 import java.util.Arrays;
 
+/** This class represents the IoT unit that can have a On/Off state
+ *
+ *  The device has a name and a state
+ * */
 public class Device extends Retrievable {
 
     private State state;
@@ -13,9 +17,11 @@ public class Device extends Retrievable {
         super(RetrievableType.DEVICE, line);
     }
 
-
+    /** The implementation of the parser for Devices
+     *  extracts the ID and and the Device information (state and name)
+     * */
     @Override
-    void parseValues(String line) {
+    void parseValues(String line) throws Exception {
         Log.d("parstag", "parsing line " + line);
         String[] parts = line.split("%");
         Log.d("parstag", Arrays.toString(parts));

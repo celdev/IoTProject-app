@@ -10,4 +10,5 @@
     <dimen name="lightbulb_size">48dp</dimen>
     <dimen name="status_bar_margin_top">36dp</dimen>
     <dimen name="thread_list_height">128dp</dimen>
+    <dimen name="spacing">18dp</dimen>
 </resources>

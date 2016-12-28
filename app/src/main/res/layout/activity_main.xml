@@ -10,11 +10,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="iotproj.iotproject.MainActivity">
 
+    <TextView
+        android:text="@string/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/connectedText"
+        android:layout_marginBottom="@dimen/spacing"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/status_bar_margin_top"
+        android:layout_below="@id/connectedText"
         android:id="@+id/icons_layout"
         android:baselineAligned="false">
 
@@ -60,7 +69,7 @@
                 android:src="@drawable/ic_heating_off"
                 android:layout_gravity="center"
                 android:id="@+id/lamp_2_image"
-                />
+                android:contentDescription="@string/heating_unit_1" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +98,7 @@
                 android:layout_height="@dimen/lightbulb_size"
                 android:src="@drawable/ic_temp"
                 android:layout_gravity="center"
-                />
+                android:contentDescription="@string/temperature" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -160,5 +169,7 @@
              />
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

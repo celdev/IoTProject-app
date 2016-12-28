@@ -8,11 +8,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/** This custom dialog provides the functionality to change
+ *  the IP of the IoT Web server
+ *
+ *  if the ip is correct (if the web server returns "ok") the dialog will be closed
+ *  otherwise a Toast with an error message will be shown
+ * */
 public class SetupDialog extends AlertDialog.Builder {
 
     private AlertDialog alertDialog;
 
-
+    /** Creates the dialog using the layout file setup_dialog_layout
+     *  and initializes the functionality of the button
+     * */
     public SetupDialog(final MainActivity mainActivity) {
         super(mainActivity);
         setTitle(R.string.setup);
@@ -32,7 +40,7 @@ public class SetupDialog extends AlertDialog.Builder {
                     public void receiveAsyncResult(String result) {
                         progressDialog.dismiss();
                         if (result != null && result.trim().equals("ok")) {
-                            mainActivity.setIoTGateWayIP(ipField.getText().toString());
+                            mainActivity.setIoTGateWayIPandRestartGetRunner(ipField.getText().toString());
                             if (alertDialog != null) {
                                 alertDialog.dismiss();
                             }

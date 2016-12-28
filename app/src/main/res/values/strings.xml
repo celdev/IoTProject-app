@@ -19,4 +19,8 @@
     <string name="running_conditions">Running conditions:</string>
     <string name="language">Language</string>
     <string name="loading">loading…</string>
+    <string name="connected">connected</string>
+    <string name="disconected">disconnected</string>
+    <string name="speechtotextfailed">Text-Till-Tal misslyckades</string>
+    <string name="server_ip_adress">Server IP adress</string>
 </resources>
