@@ -3,6 +3,7 @@ package iotproj.iotproject;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,7 +40,6 @@ public class AsyncWebServerCall extends AsyncTask<String, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

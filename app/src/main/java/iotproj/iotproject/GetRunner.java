@@ -1,6 +1,7 @@
-package iotproj.iotproject.model;
+package iotproj.iotproject;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +9,16 @@ import java.util.List;
 import iotproj.iotproject.AsyncCallback;
 import iotproj.iotproject.AsyncWebServerCall;
 import iotproj.iotproject.MainActivity;
+import iotproj.iotproject.model.ConditionThread;
+import iotproj.iotproject.model.Device;
+import iotproj.iotproject.model.Retrievable;
+import iotproj.iotproject.model.Sensor;
 
 public class GetRunner extends Thread {
 
     public String url;
     private boolean alive;
+    private boolean paused = false;
     private boolean runOnce;
 
     private String lastGet;
@@ -36,32 +42,43 @@ public class GetRunner extends Thread {
     public void run() {
         alive = true;
         while (alive) {
-            try {
-                Log.i(MainActivity.TIME_TAG, "GetRunner Thread start " + System.currentTimeMillis());
-                new AsyncWebServerCall(new AsyncCallback() {
-                    @Override
-                    public void receiveAsyncResult(String result) {
-                        Log.i(MainActivity.TIME_TAG, "GetRunner Thread stop (get result) " + System.currentTimeMillis());
-                        if (result != null && !result.equals(lastGet)) {
-                            lastGet = result;
-                            try {
-                                parseResult(result);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+            if (!paused) {
+                try {
+                    Log.i(MainActivity.TIME_TAG, "GetRunner Thread start " + System.currentTimeMillis());
+                    new AsyncWebServerCall(new AsyncCallback() {
+                        @Override
+                        public void receiveAsyncResult(String result) {
+                            Log.i(MainActivity.TIME_TAG, "GetRunner Thread stop (get result) " + System.currentTimeMillis());
+                            if (result != null && !result.equals(lastGet)) {
+                                lastGet = result;
+                                try {
+                                    parseResult(result);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
+                    }).execute(url);
+                    if (runOnce) {
+                        kill();
+                    } else {
+                        sleep(5000);
                     }
-                }).execute(url);
-                if (runOnce) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(mainActivity, e.getMessage(), Toast.LENGTH_LONG).show();
                     kill();
-                } else {
-                    sleep(5000);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                kill();
             }
         }
+    }
+
+    public void onPause() {
+        paused = true;
+    }
+
+    public void onResume() {
+        paused = false;
     }
 
     public void parseResult(String result) throws Exception {

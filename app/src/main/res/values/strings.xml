@@ -17,4 +17,6 @@
     <string name="temperature">Temperature</string>
     <string name="talk_button">Talk button</string>
     <string name="running_conditions">Running conditions:</string>
+    <string name="language">Language</string>
+    <string name="loading">loading…</string>
 </resources>

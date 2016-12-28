@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ScrollingTabContainerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +24,6 @@ import java.util.List;
 
 import iotproj.iotproject.model.ConditionThread;
 import iotproj.iotproject.model.Device;
-import iotproj.iotproject.model.GetRunner;
 import iotproj.iotproject.model.Retrievable;
 import iotproj.iotproject.model.Sensor;
 import iotproj.iotproject.model.State;
@@ -29,7 +32,6 @@ import iotproj.iotproject.model.State;
 public class MainActivity extends AppCompatActivity {
 
     private ImageButton talkBtn;
-    private TextView output;
     private ListView threadList;
     private ImageView lamp1View, heating1View;
     private TextView lamp1OnOffStateText, heating1OnOffStateText;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String ioTGateWayIP = "81.230.190.13";
     public static final int IoT_GATEWAY_PORT = 4091;
+
+    private String commandLanguage = "SV";
 
     private ArrayList<ConditionThread> conditionThreads;
     private ThreadListAdapter threadListAdapter;
@@ -55,7 +59,38 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         initButtonFunctionality();
         initList();
-        getRunner = new GetRunner(ioTGateWayIP, IoT_GATEWAY_PORT, this);
+        initSpinner();
+        startGetRunner();
+    }
+
+    private void initSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                new String[]{"Svenska", "English", "ไทย"});
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String select = (String) parent.getItemAtPosition(position);
+                switch (select) {
+                    case "Svenska":
+                        commandLanguage = "SV";
+                        break;
+                    case "English":
+                        commandLanguage = "EN";
+                        break;
+                    case "ไทย":
+                        commandLanguage = "TH";
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void initList() {
@@ -65,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getViews() {
         talkBtn = (ImageButton) findViewById(R.id.talk_button);
-        output = (TextView) findViewById(R.id.output);
         threadList = (ListView) findViewById(R.id.thread_list);
         lamp1View = (ImageView) findViewById(R.id.lamp_1_image);
         heating1View = (ImageView) findViewById(R.id.lamp_2_image);
@@ -82,12 +116,23 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                startActivityForResult(intent, 1);
                 Log.d(TAG, "starting voice command intent at " + System.currentTimeMillis());
+                startActivityForResult(intent, 1);
             }
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getRunner.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getRunner.onResume();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 public void receiveAsyncResult(String result) {
                     parseResult(result);
                 }
-            }).execute("http://" + ioTGateWayIP + ":" + IoT_GATEWAY_PORT + "/command/" + result);
+            }).execute("http://" + ioTGateWayIP + ":" + IoT_GATEWAY_PORT + "/" + commandLanguage + "/command/" + result);
         } else {
             Toast.makeText(this, "Text-Till-Tal misslyckades", Toast.LENGTH_LONG).show();
         }
@@ -146,7 +191,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseResult(String result) {
-        if (result.equalsIgnoreCase("error")) {
+        if (result == null) {
+            Toast.makeText(this, R.string.error_ip, Toast.LENGTH_LONG).show();
+        } else if (result.equalsIgnoreCase("error")) {
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
         }
         new GetRunner(ioTGateWayIP, IoT_GATEWAY_PORT, this, true);
@@ -170,7 +217,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setIoTGateWayIP(String ip) {
+        ioTGateWayIP = ip;
+        startGetRunner();
+    }
 
+    private void killGetRunner() {
+        if (getRunner != null) {
+            getRunner.kill();
+        }
+    }
+
+    private void startGetRunner() {
+        killGetRunner();
+        getRunner = new GetRunner(ioTGateWayIP, IoT_GATEWAY_PORT, this);
     }
 
     public String getIoTGateWayIP() {
