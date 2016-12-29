@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     //The GetRunner which will continuously fetch the information from the IoT gateway
     private GetRunner getRunner;
 
+    private boolean talkDialogActive = false;
+
     /** This method is called when the activity is created
      *
      *  Initializes the functionality of the activity
@@ -141,28 +143,48 @@ public class MainActivity extends AppCompatActivity {
         connectedText = (TextView) findViewById(R.id.connectedText);
     }
 
-    /** Sets the text of the ocnnection state text to
-     *  connected and the text color to green
-     * */
+    /**
+     * Sets the text of the ocnnection state text to
+     * connected and the text color to green
+     */
     public void setConnected() {
-        connectedText.setText(R.string.connected);
-        connectedText.setTextColor(Color.GREEN);
+        Log.d(TAG, "set connected called");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                connectedText.setText(R.string.connected);
+                connectedText.setTextColor(Color.GREEN);
+            }
+        });
     }
 
-    /** Sets the text of the connection state text to
-     *  loading and the text color to black
-     * */
+    /**
+     * Sets the text of the connection state text to
+     * loading and the text color to black
+     */
     public void setLoading() {
-        connectedText.setText(R.string.loading);
-        connectedText.setTextColor(Color.BLACK);
+        Log.d(TAG, "set loading called");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                connectedText.setText(R.string.loading);
+                connectedText.setTextColor(Color.BLACK);
+            }
+        });
     }
 
     /** Sets the text of the connection state text to
      *  disconnected and the text color to red
      * */
     public void setDisconnected() {
-        connectedText.setText(R.string.disconected);
-        connectedText.setTextColor(Color.RED);
+        Log.d(TAG, "set disconnected called");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                connectedText.setText(R.string.disconected);
+                connectedText.setTextColor(Color.RED);
+            }
+        });
     }
 
     /** Initializes the functionality of the Talk-button
@@ -172,6 +194,11 @@ public class MainActivity extends AppCompatActivity {
      *  specified in the voiceRecognitionLanguage variable
      *  The intent is then used as a parameter in the startActivityForResult which
      *  will cause the started activity to return a result to this Activity
+     *
+     *  talkDialogActive is set to true so that some functionality related to
+     *  stopping and starting the GetRunner isn't called when the
+     *  onPause and onResume methods are called when the speech-to-talk dialog
+     *  is showing
      * */
     private void initButtonFunctionality() {
         talkBtn.setOnClickListener(new View.OnClickListener() {
@@ -182,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM).
                         putExtra(RecognizerIntent.EXTRA_LANGUAGE, voiceRecognitionLanguage);
                 Log.d(TAG, "starting voice command intent at " + System.currentTimeMillis());
+                talkDialogActive = true;
                 startActivityForResult(intent, 1);
             }
         });
@@ -189,11 +217,16 @@ public class MainActivity extends AppCompatActivity {
 
     /** This method is called when the activity goes into a hidden state
      *  kills the GetRunner
+     *
+     *  If this method is called because the speech to text dialog
+     *  is showing, don't kill the getRunner
      * */
     @Override
     protected void onPause() {
         super.onPause();
-        killGetRunner();
+        if (!talkDialogActive) {
+            killGetRunner();
+        }
     }
 
     /** This method is called when the activty is resumed from a hidden state
@@ -201,12 +234,18 @@ public class MainActivity extends AppCompatActivity {
      *
      *  sets the graphical state of the application to loading
      *  and starts the GetRunner
+     *
+     *  if the app is resumed after the speech to text dialog
+     *  has been hidden, don't restart the getRunner
      * */
     @Override
     protected void onResume() {
         super.onResume();
-        setLoading();
-        startGetRunner();
+        if (!talkDialogActive) {
+            setLoading();
+            startGetRunner();
+        }
+        talkDialogActive = false;
     }
 
     /** This method is called when the Speech-To-Text intent returns a result

@@ -29,9 +29,9 @@ public class Sensor extends Retrievable {
      *  and stores it in the values variable
      * */
     private void setValues(String values) {
-        Log.d("setting value", values);
+        //Log.d("setting value", values);
         this.values = values.replace("[", "").replace("]", "").split(",");
-        Log.d("replaced values are = ", Arrays.toString(this.values));
+        //Log.d("replaced values are = ", Arrays.toString(this.values));
     }
 
     /** The implementation of the parser for Sensors
@@ -39,9 +39,9 @@ public class Sensor extends Retrievable {
      * */
     @Override
     void parseValues(String line) throws Exception {
-        Log.d("parstag", "parsing line " + line);
+        //Log.d("parstag", "parsing line " + line);
         String[] parts = line.split("%");
-        Log.d("parstag", Arrays.toString(parts));
+        //Log.d("parstag", Arrays.toString(parts));
         setId(Integer.parseInt(parts[1]));
         setValues(parts[2]);
     }
@@ -53,14 +53,13 @@ public class Sensor extends Retrievable {
      *  135     20.1    50%
      * */
     public String getValueOfHead(String head) {
-        Log.d("sensor", "Trying to get value of head = " + head);
+        //Log.d("sensor", "Trying to get value of head = " + head);
         if (headers == null) {
-            Log.d("test", "head is null");
             return null;
         }
         for (int i = 0; i < headers.length; i++) {
             if (headers[i].trim().equalsIgnoreCase(head)) {
-                Log.d("returning: ", "head index = " + i + " head = " + head + " value = " + values[i]);
+                //Log.d("returning: ", "head index = " + i + " head = " + head + " value = " + values[i]);
                 return values[i];
             }
         }

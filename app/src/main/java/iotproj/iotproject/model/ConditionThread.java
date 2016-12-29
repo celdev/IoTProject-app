@@ -28,9 +28,9 @@ public class ConditionThread extends Retrievable {
      * */
     @Override
     void parseValues(String line) throws Exception {
-        Log.d("parstag", "parsing line " + line);
+        //Log.d("parstag", "parsing line " + line);
         String[] parts = line.split("%");
-        Log.d("parstag", Arrays.toString(parts));
+        //Log.d("parstag", Arrays.toString(parts));
         setId(Integer.parseInt(parts[1]));
         voiceCommand = parts[2].replace("[", "").replace("]", "");
     }

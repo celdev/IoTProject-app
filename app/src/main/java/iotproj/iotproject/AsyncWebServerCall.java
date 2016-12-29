@@ -37,7 +37,7 @@ public class AsyncWebServerCall extends AsyncTask<String, Void, String> {
         try {
             Log.i(MainActivity.TIME_TAG, "urlResponse start " + System.currentTimeMillis());
             URL url = new URL(urlStr);
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
             StringBuilder stringBuilder = new StringBuilder();
             while ((line = in.readLine()) != null) {

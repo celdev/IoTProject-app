@@ -88,7 +88,8 @@ class GetRunner extends Thread {
                     }
                 }).execute(url);
                 if (runOnce) {
-                    kill();
+                    alive = false;
+                    return;
                 } else {
                     sleep(5000);
                 }
